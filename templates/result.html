@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Instagram Post</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .post-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 60%;
+        max-width: 800px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+      .post-header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #ccc;
+        margin-right: 10px;
+      }
+      .username {
+        font-weight: bold;
+      }
+      .post-image {
+        width: 100%;
+        max-height: 400px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      .post-image img {
+        width: 100%;
+        height: auto;
+      }
+      .hashtags, .comments {
+        color: #007bff;
+        margin-bottom: 10px;
+      }
+      .comment {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .comment-profile-pic {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #ccc;
+        margin-right: 10px;
+      }
+      .upload-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="post-container">
+      <div class="post-header">
+        <div class="profile-pic"></div>
+        <div class="username">user1</div>
+      </div>
+      <div class="post-image">
+        <img src="{{ url_for('image', filename='generated_image.png') }}" alt="Generated Image">
+      </div>
+      <p>{{ summary }}</p>
+      <p class="hashtags">
+        {% for hashtag in hashtags %}
+          {{ hashtag }}
+        {% endfor %}
+      </p>
+      <div class="comments">
+        {% for comment in comments %}
+          <div class="comment">
+            <div class="comment-profile-pic"></div>
+            <div class="comment-text">{{ comment }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <a class="upload-link" href="{{ url_for('index') }}">Upload another file</a>
+  </body>
+</html>
