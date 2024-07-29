@@ -10,29 +10,30 @@
         align-items: center;
         height: 100vh;
         margin: 0;
+        background-color: #f0f0f0;
       }
       .post-container {
         display: flex;
         flex-direction: column;
-        align-items: center;
         border: 1px solid #ccc;
         border-radius: 8px;
         width: 60%;
         max-width: 800px;
+        background: white;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .post-header, .post-content, .post-comments {
         padding: 20px;
       }
       .post-header {
         display: flex;
         align-items: center;
-        width: 100%;
-        margin-bottom: 10px;
       }
       .profile-pic {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        background-color: #ccc;
+        background: #ddd;
         margin-right: 10px;
       }
       .username {
@@ -40,34 +41,34 @@
       }
       .post-image {
         width: 100%;
-        max-height: 400px;
-        overflow: hidden;
-        margin-bottom: 10px;
-      }
-      .post-image img {
-        width: 100%;
         height: auto;
       }
-      .hashtags, .comments {
+      .hashtags {
         color: #007bff;
-        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+      .comments {
+        margin-top: 20px;
       }
       .comment {
         display: flex;
         align-items: center;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
       }
-      .comment-profile-pic {
+      .comment .profile-pic {
         width: 30px;
         height: 30px;
-        border-radius: 50%;
-        background-color: #ccc;
         margin-right: 10px;
+      }
+      .comment-text {
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
       }
       .upload-link {
         display: block;
         text-align: center;
-        margin-top: 20px;
+        margin: 20px 0;
         text-decoration: none;
         color: #007bff;
       }
@@ -80,21 +81,25 @@
         <div class="username">user1</div>
       </div>
       <div class="post-image">
-        <img src="{{ url_for('image', filename='generated_image.png') }}" alt="Generated Image">
+        <img src="{{ url_for('image', filename='generated_image.png') }}" alt="Generated Image" style="width: 100%; height: auto;">
       </div>
-      <p>{{ summary }}</p>
-      <p class="hashtags">
-        {% for hashtag in hashtags %}
-          {{ hashtag }}
-        {% endfor %}
-      </p>
-      <div class="comments">
-        {% for comment in comments %}
-          <div class="comment">
-            <div class="comment-profile-pic"></div>
-            <div class="comment-text">{{ comment }}</div>
-          </div>
-        {% endfor %}
+      <div class="post-content">
+        <p>{{ summary }}</p>
+        <p class="hashtags">
+          {% for hashtag in hashtags %}
+            {{ hashtag }}
+          {% endfor %}
+        </p>
+      </div>
+      <div class="post-comments">
+        <div class="comments">
+          {% for comment in comments %}
+            <div class="comment">
+              <div class="profile-pic"></div>
+              <div class="comment-text">{{ comment }}</div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
     <a class="upload-link" href="{{ url_for('index') }}">Upload another file</a>
