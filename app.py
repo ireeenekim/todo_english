@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, send_file
 from pydub import AudioSegment
 import speech_recognition as sr
-from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
+from transformers import pipeline, set_seed
 from diffusers import StableDiffusionPipeline
 from keybert import KeyBERT
 import torch
@@ -28,20 +28,14 @@ kw_model = KeyBERT()
 # Initialize the image generation model with cartoon-like style
 pipe = StableDiffusionPipeline.from_pretrained(
     "Nitrosocke/Arcane-Diffusion", 
-    torch_dtype=torch.float32,
-    use_auth_token=True,  # Add this line if you need to use a Hugging Face authentication token
-    force_download=True  # This line ensures that the model files are re-downloaded
+    torch_dtype=torch.float32
 )
 device = "cpu"
 pipe = pipe.to(device)
 
-# Initialize the GPT-2 model for generating comments
-comments_model = GPT2LMHeadModel.from_pretrained('gpt2')
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-
 def generate_image_from_text(prompt):
     # Generate image from text prompt
-    image = pipe(prompt, negative_prompt="text, letters, words").images[0]
+    image = pipe(prompt).images[0]
     # Ensure the static directory exists
     if not os.path.exists('static'):
         os.makedirs('static')
@@ -66,16 +60,10 @@ def generate_hashtags(summary):
 
 def generate_comments(summary):
     set_seed(42)
-    prompt = f"Comments about: {summary}\n1."
-    input_ids = tokenizer.encode(prompt, return_tensors='pt')
-    
-    comments = []
-    for _ in range(4):
-        comment = comments_model.generate(input_ids, max_length=50, num_return_sequences=1, truncation=True)
-        comment_text = tokenizer.decode(comment[0], skip_special_tokens=True)
-        comments.append(comment_text.split('\n')[1].strip())
-
-    return comments
+    comments_model = pipeline("text-generation", model="gpt2")
+    prompt = f"Comments about: {summary}"
+    comments = comments_model(prompt, max_new_tokens=15, num_return_sequences=4)
+    return [comment['generated_text'].split(": ")[-1].strip() for comment in comments]
 
 @app.route('/')
 def index():
